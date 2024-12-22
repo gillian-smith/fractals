@@ -1,0 +1,8 @@
+{
+    "print_params":"false",
+    "fractal":"bohemian",
+    "matrix":"[0,0,1,A],[0,1,1,0],[1,0,1,1],[1,B,0,1]",
+    "distribution":"uniform (-3-5j) (5+8j)",
+    "bounds":[-3,-4,5,4],
+    "max_iter":1000000
+}

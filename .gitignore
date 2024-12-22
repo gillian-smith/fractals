@@ -8,3 +8,7 @@ fractals/__pycache__/common.cpython-311.pyc
 fractals/__pycache__/mandelbrot.cpython-311.pyc
 fractals/__pycache__/render_fractal.cpython-311.pyc
 fractals.egg-info/entry_points.txt
+*.sh
+*_saved.json
+*.png
+fractals/__pycache__/bohemian.cpython-311.pyc

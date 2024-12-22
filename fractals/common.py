@@ -19,7 +19,7 @@ def read_params() -> argparse.ArgumentParser:
     parser.add_argument(
         "--print_params",
         action="store_false",
-        default=True,
+        default=False,
         help="Print params after loading",
     )
     parser.add_argument(
@@ -27,6 +27,24 @@ def read_params() -> argparse.ArgumentParser:
         type=str,
         default="mandelbrot", # or others TBA
         help="Fractal type",
+    )
+    parser.add_argument(
+        "--matrix",
+        type=str,
+        default="",
+        help="String representation of matrix for bohemian",
+    )
+    parser.add_argument(
+        "--distribution",
+        type=str,
+        default="",
+        help="String representation of distribution for bohemian",
+    )
+    parser.add_argument(
+        "--render_mode",
+        type=str,
+        default="grayscale",
+        help="Render mode"
     )
     parser.add_argument(
         "--bounds",
@@ -40,8 +58,21 @@ def read_params() -> argparse.ArgumentParser:
         default=0.005,
         help="Pixel width",
     )
+    parser.add_argument(
+        "--max_iter",
+        type=float,
+        default=100,
+        help="Max iters",
+    )
 
     return parser
+
+def load_params_from_json(params: Namespace) -> None:
+    with open(params.param_file, "r") as f:
+        f_text = f.read()
+    dic = json.loads(f_text)
+    for k,v in dic.items():
+        setattr(params,k,v)
 
 # Print parameters in screen and a dedicated file
 def print_params(params: Namespace) -> None:
@@ -70,7 +101,23 @@ def get_height_width(params):
     assert bounds['ymax'] > bounds['ymin'], "Ensure ymin < ymax"
     assert bounds['xmax'] > bounds['xmin'], "Ensure xmin < xmax"
     
-    h = (bounds['ymax'] - bounds['ymin'])/params.resolution
-    w = (bounds['xmax'] - bounds['xmin'])/params.resolution
+    h = int((bounds['ymax'] - bounds['ymin'])/params.resolution)
+    w = int((bounds['xmax'] - bounds['xmin'])/params.resolution)
 
     return h, w
+
+def string_to_list(str):
+    # Remove the square brackets and split into rows
+    rows = str[1:-1].split("],[")
+    matrix = []
+    num_placeholders = 0
+    # Split each row into its individual elements and create the new matrix
+    for row in rows:
+        elements = row.split(",")
+        for ind, ele in enumerate(elements):
+            if ele.isnumeric():
+                elements[ind] = int(ele)
+            else: # it's a placeholder for a random variable
+                num_placeholders += 1
+        matrix.append(elements)
+    return matrix, num_placeholders
